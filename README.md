@@ -76,26 +76,109 @@ Please note that the Istio operator is under heavy development and new releases 
 
 To track some of the significant features and future items from the roadmap please visit the [roadmap doc](docs/roadmap.md).
 
-## Contributing
+sample 
 
-If you find this project useful here's how you can help:
-
-- Send a pull request with your new features and bug fixes
-- Help new users with issues they may encounter
-- Support the development of this project and star this repo!
-
-## License
-
-Copyright (c) 2017-2019 [Banzai Cloud, Inc.](https://banzaicloud.com)
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+apiVersion: istio.banzaicloud.io/v1beta1
+kind: Istio
+metadata:
+  creationTimestamp: '2019-04-29T08:40:23Z'
+  finalizers:
+    - istio-operator.finializer.banzaicloud.io
+  generation: 2
+  labels:
+    controller-tools.k8s.io: '1.0'
+  name: istio-sample
+  namespace: istio-system
+  resourceVersion: '52500844'
+  selfLink: >-
+    /apis/istio.banzaicloud.io/v1beta1/namespaces/istio-system/istios/istio-sample
+  uid: 6e1c94fb-6a5a-11e9-b9d9-5254005148aa
+spec:
+  autoInjectionNamespaces:
+    - bookinfo
+  citadel:
+    enabled: true
+    image: 'istio/citadel:1.1.3'
+    replicaCount: 1
+  defaultPodDisruptionBudget:
+    enabled: true
+  galley:
+    enabled: true
+    image: 'istio/galley:1.1.3'
+    replicaCount: 1
+  gateways:
+    egress:
+      enabled: true
+      maxReplicas: 2
+      minReplicas: 1
+      replicaCount: 1
+      sds:
+        enabled: false
+        image: 'docker.io/istio/node-agent-k8s:1.1.3'
+      serviceType: ClusterIP
+    enabled: true
+    ingress:
+      enabled: true
+      maxReplicas: 2
+      minReplicas: 1
+      replicaCount: 1
+      sds:
+        enabled: false
+        image: 'docker.io/istio/node-agent-k8s:1.1.3'
+      serviceType: LoadBalancer
+    k8singress:
+      enabled: true
+  imagePullPolicy: IfNotPresent
+  includeIPRanges: '*'
+  meshExpansion: false
+  mixer:
+    enabled: true
+    image: 'istio/mixer:1.1.3'
+    maxReplicas: 2
+    minReplicas: 1
+    replicaCount: 1
+  mtls: false
+  nodeAgent:
+    enabled: false
+    image: 'istio/node-agent-k8s:1.1.3'
+  outboundTrafficPolicy:
+    mode: ALLOW_ANY
+  pilot:
+    enabled: true
+    image: 'istio/pilot:1.1.3'
+    maxReplicas: 2
+    minReplicas: 1
+    replicaCount: 1
+    traceSampling: 1
+  proxy:
+    image: 'istio/proxyv2:1.1.3'
+  proxyInit:
+    image: 'istio/proxy_init:1.1.3'
+  sds:
+    enabled: false
+  sidecarInjector:
+    autoInjectionPolicyEnabled: true
+    enabled: true
+    image: 'istio/sidecar_injector:1.1.3'
+    initCNIConfiguration:
+      binDir: /opt/cni/bin
+      confDir: /etc/cni/net.d
+      enabled: false
+      excludeNamespaces:
+        - istio-system
+      image: 'gcr.io/istio-release/install-cni:master-latest-daily'
+      logLevel: info
+    replicaCount: 1
+    rewriteAppHTTPProbe: true
+  tracing:
+    datadog:
+      address: '$(HOST_IP):8126'
+    enabled: true
+    lightstep:
+      accessToken: <access-token>
+      address: 'lightstep-satellite.lightstep:9292'
+      cacertPath: /etc/lightstep/cacert.pem
+    tracer: zipkin
+    zipkin:
+      address: 'zipkin.istio-system:9411'
+  version: 1.1.3
